@@ -1,4 +1,4 @@
-import { MainLayout } from "@/layout/Main.layout";
+import { MainLayout } from "@/layouts/Main.layout";
 
 type LayoutProps = {
   children: React.ReactNode;
