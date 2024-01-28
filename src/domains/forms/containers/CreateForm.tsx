@@ -1,26 +1,24 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import React from "react";
+"use client";
+import { useState } from "react";
+import { FormHeader } from "../components/FormHeader";
+import FormQuestion from "../components/FormQuestion";
 
-const CreateForm = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Create project</CardTitle>
-      <CardDescription>Deploy your new project in one-click.</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <p> Card Contend </p>
-    </CardContent>
-    <CardFooter>
-      <p> Card Footer </p>
-    </CardFooter>
-  </Card>
-);
+const CreateForm = () => {
+  const [form, setForm] = useState({
+    title: "Untitled Form",
+    description: "Form Description",
+  });
+  return (
+    <div className="grid gap-4">
+      <FormHeader
+        value={{ title: "Untitled Form", description: "Form Description" }}
+        onChange={() => {}}
+      />
+      <FormQuestion />
+      <FormQuestion />
+      <FormQuestion />
+    </div>
+  );
+};
 
 export { CreateForm };
