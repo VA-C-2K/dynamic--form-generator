@@ -1,25 +1,39 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
 import { FormQuestionType } from "./FormQuestionType";
+import { FormQuestionInput } from "./FormQuestionInput";
+import { QuestionItem } from "../containers/CreateForm";
 
-type FormQuestionProps = {};
-const FormQuestion = () => {
-    const [questionType, setQuestionType] = useState<"text" | "multiple-choice" | "checkbox">("text");
+type FormQuestionProps = {
+  question: QuestionItem;
+  onChange: (question: Partial<QuestionItem>) => void;
+};
+const FormQuestion = ({ question, onChange }: FormQuestionProps) => {
+  const { questionType } = question;
   return (
     <Card>
       <CardHeader className="flex flex-col gap-2">
         <CardTitle>
-          <Input type="text" placeholder="Question" name="question" />
+          <Input
+            type="text"
+            placeholder="Question"
+            name="question"
+            onChange={(e) =>
+              onChange({ ...question, question: e.target.value })
+            }
+          />
         </CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-2 items-start">
-        <div>
-          <h1> question options </h1>
-        </div>
+      <CardContent className="flex gap-4 justify-between items-start">
+        <FormQuestionInput question={question} onChange={onChange} />
         <FormQuestionType
-          value="text"
-          onChange={(value) => console.log(value)}
+          value={questionType}
+          onChange={(value) =>
+            onChange({
+              ...question,
+              questionType: value,
+            })
+          }
         />
       </CardContent>
     </Card>

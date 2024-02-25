@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
-type FormQuestionType = "text" | "multiple-choice" | "checkbox";
+type QuestionType = "text" | "multiple-choice" | "checkbox";
 const questionTypes = [
   {
     value: "text",
@@ -28,16 +28,15 @@ const questionTypes = [
     value: "checkbox",
     label: "Checkbox",
   },
-] as Array<{ value: FormQuestionType; label: string }>;
+] as Array<{ value: QuestionType; label: string }>;
 
 type FormQuestionProps = {
-  value?: FormQuestionType;
-  onChange: (value: FormQuestionType) => void;
+  value?: QuestionType;
+  onChange: (value: QuestionType) => void;
 };
 
-function FormQuestionType({ value: defaultType, onChange }: FormQuestionProps) {
+function FormQuestionType({ value, onChange }: FormQuestionProps) {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(defaultType);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -65,7 +64,7 @@ function FormQuestionType({ value: defaultType, onChange }: FormQuestionProps) {
                 key={questionType.value}
                 value={questionType.value}
                 onSelect={(currentValue: string) => {
-                  onChange(currentValue as FormQuestionType);
+                  onChange(currentValue as QuestionType);
                   setOpen(false);
                 }}
               >
@@ -79,5 +78,5 @@ function FormQuestionType({ value: defaultType, onChange }: FormQuestionProps) {
   );
 }
 
-
+export type { QuestionType };
 export { FormQuestionType };
