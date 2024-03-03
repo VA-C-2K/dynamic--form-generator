@@ -6,37 +6,15 @@ import { useRef, useState } from "react";
 import { QuestionItem } from "../containers/CreateForm";
 import { Edit, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { convetStringToSlug, isLabelValid } from "../utils";
 
 type Option = {
-  value: string;
+  id: string;
   label: string;
+  isChecked?: boolean;
 };
 
 type MultipleOptions = Option[];
-const convetStringToSlug = (str: string) => {
-  return str
-    .toLowerCase()
-    .replace(/ /g, "-")
-    .replace(/[^\w-]+/g, "");
-};
-
-const checkIfOptionExists = (options: Option[], label: string) => {
-  return options.some((option) => option.label.trim() === label.trim());
-};
-
-const isLabelValid = ({
-  currentLabel,
-  options,
-}: {
-  currentLabel: string;
-  options: Option[];
-}) => {
-  return (
-    typeof currentLabel === "string" &&
-    currentLabel.length > 0 &&
-    !checkIfOptionExists(options, currentLabel)
-  );
-};
 
 type FormRadioGroupProps = {
   question?: Partial<QuestionItem>;
@@ -54,7 +32,7 @@ function FormRadioGroup({ question, onChange }: FormRadioGroupProps) {
       isLabelValid({ currentLabel, options })
     ) {
       const option = {
-        value: convetStringToSlug(currentLabel),
+        id: convetStringToSlug(currentLabel),
         label: currentLabel,
       };
       onChange &&
@@ -66,15 +44,15 @@ function FormRadioGroup({ question, onChange }: FormRadioGroupProps) {
     }
   };
 
-  const handleRemoveOption = (value: string) => {
+  const handleRemoveOption = (id: string) => {
     onChange?.({
       ...question,
-      options: options.filter((option) => option.value !== value),
+      options: options.filter((option) => option.id !== id),
     });
   };
 
-  const handleEditOption = (value: string) => {
-    const option = options.find((option) => option.value === value);
+  const handleEditOption = (id: string) => {
+    const option = options.find((option) => option.id === id);
     setEditingOption(option ?? null);
   };
 
@@ -83,12 +61,12 @@ function FormRadioGroup({ question, onChange }: FormRadioGroupProps) {
       typeof newLabel === "string" &&
       isLabelValid({ currentLabel: newLabel, options })
     ) {
-      const newValue = convetStringToSlug(newLabel);
+      const newId = convetStringToSlug(newLabel);
       const newOptions = options.map((option) => {
-        if (option.value === editingOption?.value) {
+        if (option.id === editingOption?.id) {
           return {
             ...option,
-            value: newValue,
+            id: newId,
             label: newLabel,
           };
         }
@@ -105,36 +83,36 @@ function FormRadioGroup({ question, onChange }: FormRadioGroupProps) {
   return (
     <div className="grid gap-4">
       <RadioGroup className="grid grid-4 w-full">
-        {options.map(({ label, value }) => (
-          <div key={value} className="grid grid-cols-2 gap-2 min-h-[40px]">
+        {options.map(({ label, id }) => (
+          <div key={id} className="grid grid-cols-2 gap-2 min-h-[40px]">
             <div className="flex items-center gap-2">
               <Input
                 defaultValue={editingOption?.label}
                 className={cn("hidden", {
-                  block: editingOption?.value === value,
-                  "border border-input": editingOption?.value !== value,
-                  "border border-primary": editingOption?.value === value,
+                  block: editingOption?.id === id,
+                  "border border-input": editingOption?.id !== id,
+                  "border border-primary": editingOption?.id === id,
                 })}
                 ref={inputEditRef}
                 onBlur={(e) => handleUpdateOption(e.target.value ?? "")}
               />
               <div
                 className={cn("flex items-center gap-2", {
-                  hidden: editingOption?.value === value,
+                  hidden: editingOption?.id === id,
                 })}
               >
-                <RadioGroupItem value={value} id={value} />
-                <Label htmlFor={value}>{label}</Label>
+                <RadioGroupItem value={id} id={id} />
+                <Label htmlFor={id}>{label}</Label>
               </div>
             </div>
             <div className="flex items-center justify-end gap-2">
               <Trash
                 className="cursor-pointer"
-                onClick={() => handleRemoveOption(value)}
+                onClick={() => handleRemoveOption(id)}
               />
               <Edit
                 className="cursor-pointer"
-                onClick={() => handleEditOption(value)}
+                onClick={() => handleEditOption(id)}
               />
             </div>
           </div>

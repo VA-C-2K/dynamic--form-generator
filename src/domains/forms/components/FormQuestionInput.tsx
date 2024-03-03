@@ -23,7 +23,7 @@ const inputs = ({
     />
   ),
   "multiple-choice": <FormRadioGroup question={question} onChange={onChange} />,
-  checkbox: <FormCheckBoxes />,
+  checkbox: <FormCheckBoxes question={question} onChange={onChange} />,
 });
 
 const FormQuestionInput = (props: FormQuestionInputProps) => {
