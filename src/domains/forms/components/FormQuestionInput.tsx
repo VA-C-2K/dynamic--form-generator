@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { QuestionType } from "./FormQuestionType";
 import { FormRadioGroup } from "./FormRadioGroup";
 import { FormCheckBoxes } from "./FormCheckBoxes";
-import { QuestionItem } from "../containers/CreateForm";
+import { QuestionItem } from "../containers/DynamicForm";
 
 type FormQuestionInputProps = {
   question: QuestionItem;

@@ -31,16 +31,16 @@ const FormHeader = ({ value, onChange }: FormHeaderProps) => {
             name="title"
             onChange={handleChange}
             className="text-3xl font-semibold h-16"
+            value={value?.title}
           />
         </CardTitle>
-        <CardDescription>
-          <Input
-            type="text"
-            placeholder="Form Description"
-            name="description"
-            onChange={handleChange}
-          />
-        </CardDescription>
+        <Input
+          type="text"
+          placeholder="Form Description"
+          name="description"
+          onChange={handleChange}
+          value={value?.description}
+        />
       </CardHeader>
     </Card>
   );

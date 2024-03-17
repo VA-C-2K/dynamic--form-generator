@@ -1,14 +1,14 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
-import { QuestionItem } from "../containers/CreateForm";
+import { QuestionItem } from "../containers/DynamicForm";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import { Option } from "./FormRadioGroup";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Edit, Trash } from "lucide-react";
 import { convetStringToSlug, isLabelValid } from "../utils";
+import { FormAddOptionButton } from "./FormAddOptionButton";
 
 type FormCheckBoxesProps = {
   question?: Partial<QuestionItem>;
@@ -34,7 +34,6 @@ function FormCheckBoxes({ question, onChange }: FormCheckBoxesProps) {
         ...question,
         options: [...options, option],
       });
-      inputAddRef.current?.focus();
       inputAddRef.current!.value = "";
     }
   };
@@ -50,7 +49,6 @@ function FormCheckBoxes({ question, onChange }: FormCheckBoxesProps) {
     const option = options.find((option) => option.id === id);
     setEditingOption(option ?? null);
     inputEditRef.current?.focus();
-    inputEditRef.current!.value = option?.label ?? "";
   };
 
   const handleUpdateOption = (label: string) => {
@@ -89,51 +87,50 @@ function FormCheckBoxes({ question, onChange }: FormCheckBoxesProps) {
   };
 
   return (
-    <div className="grid gap-4 w-full">
-      {options.map(({ id, label, isChecked }) => (
-        <div key={id} className="flex items-center gap-2 min-h-[40px]">
-          <Input
-            defaultValue={editingOption?.label}
-            className={cn("hidden", {
-              block: editingOption?.id === id,
-              "border border-input": editingOption?.id !== id,
-              "border border-primary": editingOption?.id === id,
-            })}
-            ref={inputEditRef}
-            onBlur={(e) => handleUpdateOption(e.target.value ?? "")}
-          />
-          <div
-            className={cn("flex items-center gap-2", {
-              hidden: editingOption?.id === id,
-            })}
-          >
-            <Checkbox
-              key={id}
-              id={id}
-              defaultChecked={options.find((option) => option.id === id)?.isChecked}
-              onCheckedChange={() => handleOnCheck(id)}
-              checked={isChecked}
-            />
-            <Label htmlFor={id}>{label}</Label>
+    <div className="grid gap-4">
+      <div className="grid grid-4 w-full">
+        {options.map(({ id, label, isChecked }) => (
+          <div key={id} className="grid grid-cols-2 gap-2 min-h-[40px]">
+            <div className="flex items-center gap-2">
+              {editingOption?.id === id ? (
+                <Input
+                  defaultValue={editingOption?.label}
+                  className={"border border-primary"}
+                  ref={inputEditRef}
+                  onBlur={(e) => handleUpdateOption(e.target.value ?? "")}
+                />
+              ) : null}
+              <div
+                className={cn("flex items-center gap-2", {
+                  hidden: editingOption?.id === id,
+                })}
+              >
+                <Checkbox
+                  key={id}
+                  id={id}
+                  defaultChecked={
+                    options.find((option) => option.id === id)?.isChecked
+                  }
+                  onCheckedChange={() => handleOnCheck(id)}
+                  checked={isChecked}
+                />
+                <Label htmlFor={id}>{label}</Label>
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-2">
+              <Trash
+                className="cursor-pointer"
+                onClick={() => handleRemoveOption(id)}
+              />
+              <Edit
+                className="cursor-pointer"
+                onClick={() => handleEditOption(id)}
+              />
+            </div>
           </div>
-          <div className="flex items-center justify-end gap-2">
-            <Trash
-              className="cursor-pointer"
-              onClick={() => handleRemoveOption(id)}
-            />
-            <Edit
-              className="cursor-pointer"
-              onClick={() => handleEditOption(id)}
-            />
-          </div>
-        </div>
-      ))}
-      <div className="flex gap-2">
-        <Input placeholder="Add option" ref={inputAddRef} />
-        <Button type="button" onClick={handleAddOption} variant={"ghost"}>
-          Add option
-        </Button>
+        ))}
       </div>
+      <FormAddOptionButton onAddOption={handleAddOption} ref={inputAddRef} />
     </div>
   );
 }

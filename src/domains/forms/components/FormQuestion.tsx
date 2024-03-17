@@ -2,22 +2,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FormQuestionType } from "./FormQuestionType";
 import { FormQuestionInput } from "./FormQuestionInput";
-import { QuestionItem } from "../containers/CreateForm";
+import { QuestionItem } from "../containers/DynamicForm";
+import { Trash } from "lucide-react";
 
 type FormQuestionProps = {
   question: QuestionItem;
   onChange: (question: Partial<QuestionItem>) => void;
+  onDelete: () => void;
 };
-const FormQuestion = ({ question, onChange }: FormQuestionProps) => {
+const FormQuestion = ({ question, onChange, onDelete }: FormQuestionProps) => {
   const { questionType } = question;
   return (
-    <Card>
+    <Card className="relative">
       <CardHeader className="flex flex-col gap-2">
         <CardTitle>
           <Input
             type="text"
             placeholder="Question"
             name="question"
+            value={question.question}
             onChange={(e) =>
               onChange({ ...question, question: e.target.value })
             }
@@ -36,6 +39,9 @@ const FormQuestion = ({ question, onChange }: FormQuestionProps) => {
           }
         />
       </CardContent>
+      <Trash className="w-8 h-8 cursor-pointer absolute right-0 top-[-10px] bg-red-600 rounded-full text-white p-2"
+      onClick={onDelete}
+      />
     </Card>
   );
 };

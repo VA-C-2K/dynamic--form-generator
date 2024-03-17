@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useRef, useState } from "react";
-import { QuestionItem } from "../containers/CreateForm";
+import { QuestionItem } from "../containers/DynamicForm";
 import { Edit, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { convetStringToSlug, isLabelValid } from "../utils";
+import { FormAddOptionButton } from "./FormAddOptionButton";
 
 type Option = {
   id: string;
@@ -86,16 +86,14 @@ function FormRadioGroup({ question, onChange }: FormRadioGroupProps) {
         {options.map(({ label, id }) => (
           <div key={id} className="grid grid-cols-2 gap-2 min-h-[40px]">
             <div className="flex items-center gap-2">
-              <Input
-                defaultValue={editingOption?.label}
-                className={cn("hidden", {
-                  block: editingOption?.id === id,
-                  "border border-input": editingOption?.id !== id,
-                  "border border-primary": editingOption?.id === id,
-                })}
-                ref={inputEditRef}
-                onBlur={(e) => handleUpdateOption(e.target.value ?? "")}
-              />
+              {editingOption?.id === id ? (
+                <Input
+                  defaultValue={editingOption?.label}
+                  className={"border border-primary"}
+                  ref={inputEditRef}
+                  onBlur={(e) => handleUpdateOption(e.target.value ?? "")}
+                />
+              ) : null}
               <div
                 className={cn("flex items-center gap-2", {
                   hidden: editingOption?.id === id,
@@ -118,12 +116,7 @@ function FormRadioGroup({ question, onChange }: FormRadioGroupProps) {
           </div>
         ))}
       </RadioGroup>
-      <div className="flex gap-2">
-        <Input placeholder="Add option" ref={inputAddRef} />
-        <Button type="button" onClick={handleAddOption} variant={"ghost"}>
-          Add option
-        </Button>
-      </div>
+      <FormAddOptionButton onAddOption={handleAddOption} ref={inputAddRef} />
     </div>
   );
 }
