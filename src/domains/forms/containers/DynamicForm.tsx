@@ -11,10 +11,6 @@ import {
   createClientComponentClient,
 } from "@supabase/auth-helpers-nextjs";
 
-// type Question = {
-
-// }
-
 type QuestionItem = {
   id: string;
   questionType: QuestionType;
@@ -81,6 +77,7 @@ const DynamicForm = ({ session, form }: DynamicFormProps) => {
     }
     return supabase.from("forms").insert(payload);
   };
+
   return (
     <div className="grid gap-4">
       <FormHeader
