@@ -1,4 +1,4 @@
-import { Option } from "@/app/server/types/DynamicForm";
+import { Option } from "@/server/types/DynamicForm";
 
 const convetStringToSlug = (str: string) => {
     return str
