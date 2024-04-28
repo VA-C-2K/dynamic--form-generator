@@ -1,4 +1,4 @@
-import { Option } from "./components/FormRadioGroup";
+import { Option } from "@/app/server/types/DynamicForm";
 
 const convetStringToSlug = (str: string) => {
     return str

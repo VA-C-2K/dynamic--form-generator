@@ -1,20 +1,14 @@
-import { DynamicForm } from "@/domains/forms/containers/DynamicForm";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import React from "react";
+import { DynamicFormFeilds } from "@/domains/forms/containers/DynamicFormFeilds";
+import { fetchById } from "@/server/database/forms";
+import { DynamicForm, } from "@/server/types/DynamicForm";
 type PageProps = {
   params: { id: string };
   searchParams: {};
 };
 const page = async ({ params }: PageProps) => {
   const { id } = params;
-  const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-  const { data: form } = await supabase.from("forms").select("*").eq("id", id).single();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  return <DynamicForm session={session} form={form} />;
+  const form = await fetchById<DynamicForm>(id);
+  return <DynamicFormFeilds form={form} />;
 };
 
 export default page;

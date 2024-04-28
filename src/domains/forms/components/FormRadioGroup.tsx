@@ -2,19 +2,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useRef, useState } from "react";
-import { QuestionItem } from "../containers/DynamicForm";
 import { Edit, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { convetStringToSlug, isLabelValid } from "../utils";
 import { FormAddOptionButton } from "./FormAddOptionButton";
-
-type Option = {
-  id: string;
-  label: string;
-  isChecked?: boolean;
-};
-
-type MultipleOptions = Option[];
+import { Option, QuestionItem } from "@/server/types/DynamicForm";
 
 type FormRadioGroupProps = {
   question?: Partial<QuestionItem>;
@@ -120,5 +112,4 @@ function FormRadioGroup({ question, onChange }: FormRadioGroupProps) {
     </div>
   );
 }
-export type { Option, MultipleOptions };
 export { FormRadioGroup };

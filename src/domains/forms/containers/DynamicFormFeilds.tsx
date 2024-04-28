@@ -1,23 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FormHeader } from "../components/FormHeader";
 import FormQuestion from "../components/FormQuestion";
 import { Button } from "@/components/ui/button";
-import { QuestionType } from "../components/FormQuestionType";
-import { MultipleOptions } from "../components/FormRadioGroup";
 import { v4 as uuidv4 } from "uuid";
-import {
-  Session,
-  createClientComponentClient,
-} from "@supabase/auth-helpers-nextjs";
+import { QuestionItem } from "@/server/types/DynamicForm";
+import { useDynamicForm } from "../hooks/useDynamicForm";
 
-type QuestionItem = {
-  id: string;
-  questionType: QuestionType;
-  question: string;
-  text?: string;
-  options?: MultipleOptions;
-};
 type Form = {
   id?: string;
   title: string;
@@ -25,12 +14,10 @@ type Form = {
   questions: QuestionItem[];
 };
 type DynamicFormProps = {
-  session: Session | null;
   form?: Form;
 };
-const DynamicForm = ({ session, form }: DynamicFormProps) => {
-  const supabase = createClientComponentClient();
-  const user = session?.user;
+const DynamicFormFeilds = ({ form }: DynamicFormProps) => {
+  const { handleOnSubmit } = useDynamicForm();
   const [{ title, description, questions }, setForm] = useState<Form>(
     form ?? {
       title: "",
@@ -38,6 +25,13 @@ const DynamicForm = ({ session, form }: DynamicFormProps) => {
       questions: [],
     }
   );
+
+  const payload = useMemo(() => ({
+    ...form,
+    title,
+    description,
+    questions,
+  }),[description, form, questions, title]);
 
   const handleAddQuestion = () => {
     const question: QuestionItem = {
@@ -62,22 +56,6 @@ const DynamicForm = ({ session, form }: DynamicFormProps) => {
     setForm((prev) => ({ ...prev, questions: newQuestions }));
   };
 
-  const handleSubmit = async () => {
-    if (questions.length === 0) {
-      return;
-    }
-    const payload = {
-      title,
-      description,
-      questions,
-      user_id: user?.id,
-    }
-    if(form?.id){
-      return supabase.from("forms").update(payload).eq("id", form.id);
-    }
-    return supabase.from("forms").insert(payload);
-  };
-
   return (
     <div className="grid gap-4">
       <FormHeader
@@ -98,7 +76,7 @@ const DynamicForm = ({ session, form }: DynamicFormProps) => {
         <Button onClick={handleAddQuestion} type="button">
           Add Question
         </Button>
-        <Button onClick={handleSubmit} type="button">
+        <Button onClick={() => handleOnSubmit(payload)} type="button">
           Save
         </Button>
       </div>
@@ -106,5 +84,4 @@ const DynamicForm = ({ session, form }: DynamicFormProps) => {
   );
 };
 
-export type { QuestionItem };
-export { DynamicForm };
+export { DynamicFormFeilds };

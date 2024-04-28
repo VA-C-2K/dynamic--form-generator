@@ -12,9 +12,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { QuestionType } from "@/server/types/DynamicForm";
 import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
-type QuestionType = "text" | "multiple-choice" | "checkbox";
 const questionTypes = [
   {
     value: "text",

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FormQuestionType } from "./FormQuestionType";
 import { FormQuestionInput } from "./FormQuestionInput";
-import { QuestionItem } from "../containers/DynamicForm";
+import { QuestionItem } from "../containers/DynamicFormFeilds";
 import { Trash } from "lucide-react";
 
 type FormQuestionProps = {
